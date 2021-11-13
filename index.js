@@ -21,6 +21,8 @@ const run = async () => {
       console.log('connected successfully');
       const carhubCollection = database.collection("carhub");
       const orderCollection = database.collection("carorder");
+      const reviewCollection = database.collection("review");
+      const userCollection = database.collection("user");
 
 
        // Get all the car from client side Homecar and carhub menu
@@ -99,6 +101,59 @@ const run = async () => {
         res.json(result);
     });
 
+    // Delete a car product 
+    app.delete('/managecar', async(req,res)=> {
+        const deleteId = req.body.deleteId;
+        const result = await carhubCollection.deleteOne({_id:objectId(deleteId)});
+        res.json({res:' '})
+      })
+    // Update a booking by admin 
+    app.put('/managecar', async (req,res)=> {
+        const updateId = req.body.updateId;
+        const status = req.body.status;
+        const filter = { _id: objectId(updateId)};
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: {
+            status: status
+          },
+        };
+        const result = await carhubCollection.updateOne(filter, updateDoc, options);
+        // console.log(result);
+        res.json({res:' '});
+      });
+
+       //   post review 
+       app.post('/review',async (req,res)=>{
+        const review=req.body;
+        const result =await reviewCollection.insertOne(review);
+        // console.log(result);
+        res.json(result);
+    });
+    // Get all the car from client review
+    app.get("/review", async (req, res) => {
+        const allReview = await reviewCollection.find({});
+        const convertedReview = await allReview.toArray();
+        res.json(convertedReview);
+      });
+
+    //   add user 
+    app.post('/users', async (req, res) => {
+        const user = req.body;
+        const result = await userCollection.insertOne(user);
+        // console.log(result);
+        res.json(result);
+    });
+
+    app.put('/users', async (req, res) => {
+        const user = req.body;
+        const filter = { email: user.email };
+        const options = { upsert: true };
+        const updateDoc = { $set: user };
+        const result = await userCollection.updateOne(filter, updateDoc, options);
+        res.json(result);
+    });
+
       
   
       
@@ -116,3 +171,7 @@ const run = async () => {
   app.listen(port, () => {
     console.log("listening", port);
   });
+
+
+//   heroku site
+// https://floating-tor-66173.herokuapp.com/

@@ -159,11 +159,12 @@ const run = async () => {
         const filter = { email: user.email };
         const updateDoc = { $set: { role: 'admin' } };
         const result = await userCollection.updateOne(filter, updateDoc);
-        console.log(result);
+        // console.log(result);
         res.json(result);
    
 
     });
+    
       //filtr admin
         app.get('/user/:email', async (req, res) => {
             const email = req.params.email;

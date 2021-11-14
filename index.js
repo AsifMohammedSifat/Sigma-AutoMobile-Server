@@ -153,6 +153,29 @@ const run = async () => {
         const result = await userCollection.updateOne(filter, updateDoc, options);
         res.json(result);
     });
+    // make admin  method 
+    app.put('/user/admin', async (req, res) => {
+        const user = req.body;
+        const filter = { email: user.email };
+        const updateDoc = { $set: { role: 'admin' } };
+        const result = await userCollection.updateOne(filter, updateDoc);
+        console.log(result);
+        res.json(result);
+   
+
+    });
+      //filtr admin
+        app.get('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            // console.log('success');
+            res.json({ admin: isAdmin });
+        })
 
       
   

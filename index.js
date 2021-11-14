@@ -195,6 +195,3 @@ const run = async () => {
     console.log("listening", port);
   });
 
-
-//   heroku site
-// https://floating-tor-66173.herokuapp.com/
